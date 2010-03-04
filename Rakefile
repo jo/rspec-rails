@@ -19,24 +19,32 @@ begin
     gem.homepage = "http://github.com/rspec/rspec-rails"
     gem.authors = ["David Chelimsky", "Chad Humphries"]
     gem.rubyforge_project = "rspec"
-    gem.add_dependency "rspec", "2.0.0.a10"
+    gem.add_dependency "rspec", gem.version
     gem.add_dependency "webrat", ">= 0.7.0"
     gem.post_install_message = <<-EOM
 #{"*"*50}
 
   Thank you for installing #{gem.summary}!
 
-  This version of rspec-rails only works with versions of rails >= 3.0.0.pre.
+  This version of rspec-rails only works with 
+  versions of rails >= 3.0.0.pre.
 
-  The 'a' in #{gem.version} means this is alpha software.  If you are looking
-  for a supported production release, please "gem install rspec-rails" (without
-  --pre).
+  This is beta software. If you are looking
+  for a supported production release, please
+  "gem install rspec-rails" (without --pre).
 
 #{"*"*50}
 EOM
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
+
+namespace :gem do
+  desc "push to gemcutter"
+  task :push => :build do
+    system "gem push pkg/rspec-rails-#{Rspec::Rails::Version::STRING}.gem"
+  end
 end
 
 namespace :generate do
@@ -47,15 +55,15 @@ namespace :generate do
     else
       puts <<-MESSAGE
 
-  You need to install rails in ./tmp/rails before you can run the 
-  #{t.name} task:
-    
-    git clone git://github.com/rails/rails tmp/rails
+You need to install rails in ./tmp/rails before you can run the 
+#{t.name} task:
+  
+  git clone git://github.com/rails/rails tmp/rails
 
-  (We'll automate this eventually, but running 'git clone' from rake in this
-  project is mysteriously full of fail)
+(We'll automate this eventually, but running 'git clone' from rake in this
+project is mysteriously full of fail)
 
-  MESSAGE
+MESSAGE
     end
   end
 
